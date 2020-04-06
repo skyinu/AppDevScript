@@ -1,6 +1,14 @@
-
+#! /usr/bin/env node
+const resTools = require('./restools');
 let searchInApk = (apkPath, targetRegex, isResMode) => {
-
+    reveriseApK(apkPath)
 }
 
-export const searchInApk = searchInApk
+let reveriseApK = (apkPath) => {
+    let command = " d " + apkPath
+    resTools.callApkTool(command)
+}
+
+module.exports = {
+    searchInApk
+}

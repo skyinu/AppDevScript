@@ -1,5 +1,5 @@
 #! /usr/bin/env node
-import finder from './finder';
+const finder = require('./finder')
 let argvs = process.argv;
 let apkPath;
 let targetRegex;
