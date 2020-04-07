@@ -4,6 +4,7 @@ const APK_TOOL_PATH = path.join(__dirname, "..", "res", path.sep, "apktool_2.4.1
 const ARSC_BLAMER_PATH = path.join(__dirname, "..", "res", path.sep, "android-arscblamer.jar")
 let callApkTool = (command) => {
     let realComand = "java -jar " + APK_TOOL_PATH + command
+    console.log("callApkTool : " + realComand)
     childProcess.exec(realComand, (error, stdout, stderr) => {
         if (error) {
             console.error(`callApkTool exec error: ${error}`);
@@ -20,6 +21,7 @@ let callApkTool = (command) => {
 
 let callArscBlamer = (command) => {
     let realComand = "java -jar " + ARSC_BLAMER_PATH + command
+    console.log("callArscBlamer : " + realComand)
     childProcess.exec(realComand, (error, stdout, stderr) => {
         if (error) {
             console.error(`callArscBlamer exec error: ${error}`);

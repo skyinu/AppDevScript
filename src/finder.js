@@ -1,12 +1,34 @@
 #! /usr/bin/env node
 const resTools = require('./restools');
+const path = require('path');
+const parse = require('csv-parse/lib/sync')
+const assert = require('assert')
+const fs = require('fs')
+
 let searchInApk = (apkPath, targetRegex, isResMode) => {
-    reveriseApK(apkPath)
+    let outputArscFilePath = parseArsc(apkPath)
+    let arscCsv = fs.readFileSync(outputArscFilePath, 'utf8')
+    let arscData = parse(arscCsv, {
+        columns: true,
+        skip_empty_lines: true
+    })
+    let outputSmaliPath = reveriseApK(apkPath)
+    findArscReflectInSrc(arscData, path.join(outputSmaliPath, "smali"))
+}
+let parseArsc = (apkPath) => {
+    let outputFilePath = path.join(apkPath, "..", "arsc.csv")
+    let command = " --apk=" + apkPath + " --type=ENTRIES > " + outputFilePath
+    resTools.callArscBlamer(command)
+    return outputFilePath
+}
+let reveriseApK = (apkPath) => {
+    let outputFilePath = path.join(apkPath, "..", "apktools")
+    let command = " d " + apkPath + " -o " + outputFilePath
+    resTools.callApkTool(command)
 }
 
-let reveriseApK = (apkPath) => {
-    let command = " d " + apkPath
-    resTools.callApkTool(command)
+let findArscReflectInSrc = (arscData, outputSrcPath) => {
+
 }
 
 module.exports = {

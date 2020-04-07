@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/skyinu/TrackApkTool/issues"
   },
-  "homepage": "https://github.com/skyinu/TrackApkTool#readme"
+  "homepage": "https://github.com/skyinu/TrackApkTool#readme",
+  "dependencies": {
+    "csv-parse": "^4.8.8"
+  }
 }
