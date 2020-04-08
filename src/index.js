@@ -20,5 +20,5 @@ for (let index = 0; index < argvs.length; index++) {
         isResMode = true
     }
 }
-console.log("apk path is " + apkPath + "targetRegex is " + targetRegex + " isResMode " + isResMode)
+console.log("apk path is " + apkPath + " targetRegex is " + targetRegex + " isResMode " + isResMode)
 finder.searchInApk(apkPath, targetRegex, isResMode)

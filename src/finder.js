@@ -2,19 +2,29 @@
 const resTools = require('./restools');
 const path = require('path');
 const parse = require('csv-parse/lib/sync')
-const assert = require('assert')
 const fs = require('fs')
+const KEY_RESOURCE_TYPE = "Type"
+const KEY_RESOURCE_NAME = "Name"
+const KEY_IDENTIDER_METHOD = "getIdentifier(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)I"
 
 let searchInApk = (apkPath, targetRegex, isResMode) => {
-    let outputArscFilePath = parseArsc(apkPath)
-    let arscCsv = fs.readFileSync(outputArscFilePath, 'utf8')
-    let arscData = parse(arscCsv, {
-        columns: true,
-        skip_empty_lines: true
-    })
     let outputSmaliPath = reveriseApK(apkPath)
-    findArscReflectInSrc(arscData, path.join(outputSmaliPath, "smali"))
+    let resultFiles = {}
+    if (isResMode) {
+        let outputArscFilePath = parseArsc(apkPath)
+        let arscCsv = fs.readFileSync(outputArscFilePath, 'utf8')
+        let arscData = parse(arscCsv, {
+            columns: true,
+            skip_empty_lines: true
+        })
+        findArscReflectInSrc(arscData, path.join(outputSmaliPath, "smali"), resultFiles)
+    } else {
+        findRegexStrInSrc(targetRegex, path.join(outputSmaliPath, "smali"), resultFiles)
+    }
+    let outputFilePath = path.join(apkPath, "..", "result_report.json")
+    fs.writeFileSync(outputFilePath, JSON.stringify(resultFiles))
 }
+
 let parseArsc = (apkPath) => {
     let outputFilePath = path.join(apkPath, "..", "arsc.csv")
     let command = " --apk=" + apkPath + " --type=ENTRIES > " + outputFilePath
@@ -24,10 +34,32 @@ let parseArsc = (apkPath) => {
 let reveriseApK = (apkPath) => {
     let outputFilePath = path.join(apkPath, "..", "apktools")
     let command = " d " + apkPath + " -o " + outputFilePath
-    resTools.callApkTool(command)
+    // resTools.callApkTool(command)
+    return outputFilePath
 }
 
-let findArscReflectInSrc = (arscData, outputSrcPath) => {
+let findArscReflectInSrc = (arscData, outputSrcPath, resultFiles) => {
+    travelDirectory(outputSrcPath, (originFile) => {
+        let smaliSrc = fs.readFileSync(originFile, 'utf8')
+        let fileKey = originFile.slice(outputSrcPath.length + 1, originFile.length - 6)
+        if (smaliSrc.indexOf(KEY_IDENTIDER_METHOD) < 0) {
+            return
+        }
+        resultFiles[fileKey] = []
+        console.log("handle file " + fileKey)
+        for (let index = 0; index < arscData.length; index++) {
+            const element = arscData[index];
+            let resType = element[KEY_RESOURCE_TYPE]
+            let resName = element[KEY_RESOURCE_NAME]
+            if (smaliSrc.indexOf(" \"" + resName + "\"") >= 0) {
+                resultFiles[fileKey].push(resType + "." + resName)
+            }
+        }
+    })
+
+}
+
+let findRegexStrInSrc = (targetRegex, outputSrcPath, resultFiles) => {
 
 }
 
