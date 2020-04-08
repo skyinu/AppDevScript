@@ -34,7 +34,7 @@ let parseArsc = (apkPath) => {
 let reveriseApK = (apkPath) => {
     let outputFilePath = path.join(apkPath, "..", "apktools")
     let command = " d " + apkPath + " -o " + outputFilePath
-    // resTools.callApkTool(command)
+    resTools.callApkTool(command)
     return outputFilePath
 }
 
