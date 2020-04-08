@@ -31,6 +31,22 @@ let findArscReflectInSrc = (arscData, outputSrcPath) => {
 
 }
 
+let travelDirectory = (inputDir, action) => {
+    fs.readdirSync(inputDir).forEach(((subFile) => {
+        if (subFile.startsWith(".")) {
+            console.log("ignore hiden file")
+            return
+        }
+        let subPath = path.join(inputDir, subFile);
+        if (fs.statSync(subPath).isDirectory()) {
+            travelDirectory(subPath, action);
+        } else {
+            action(subPath);
+        }
+    }))
+}
+
+
 module.exports = {
     searchInApk
 }
