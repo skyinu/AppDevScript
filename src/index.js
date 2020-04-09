@@ -21,4 +21,8 @@ for (let index = 0; index < argvs.length; index++) {
     }
 }
 console.log("apk path is " + apkPath + " targetRegex is " + targetRegex + " isResMode " + isResMode)
-finder.searchInApk(apkPath, targetRegex, isResMode)
+if (isResMode || targetRegex) {
+    finder.searchInApk(apkPath, targetRegex, isResMode)
+} else {
+    console.log("invalid input")
+}
