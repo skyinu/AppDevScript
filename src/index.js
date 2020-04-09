@@ -14,7 +14,7 @@ for (let index = 0; index < argvs.length; index++) {
         apkPath = argvs[index + 1].trim()
         index++
     } else if (argvs[index].toLocaleLowerCase() === TARGET_REGEX) {
-        targetRegex = argvs[index + 1].trim().split(SUPPORT_SUFFIX_SEPERETOR)
+        targetRegex = argvs[index + 1].trim()
         index++
     } else if (argvs[index].toLocaleLowerCase() === AND_RES_MODE) {
         isResMode = true

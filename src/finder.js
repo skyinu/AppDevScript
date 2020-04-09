@@ -9,7 +9,7 @@ const KEY_IDENTIDER_METHOD = "getIdentifier(Ljava/lang/String;Ljava/lang/String;
 
 let searchInApk = (apkPath, targetRegex, isResMode) => {
     let outputSmaliPath = reveriseApK(apkPath)
-    let resultFiles = {}
+    let resultFiles
     if (isResMode) {
         let outputArscFilePath = parseArsc(apkPath)
         let arscCsv = fs.readFileSync(outputArscFilePath, 'utf8')
@@ -17,8 +17,10 @@ let searchInApk = (apkPath, targetRegex, isResMode) => {
             columns: true,
             skip_empty_lines: true
         })
+        resultFiles = {}
         findArscReflectInSrc(arscData, path.join(outputSmaliPath, "smali"), resultFiles)
     } else {
+        resultFiles = []
         findRegexStrInSrc(targetRegex, path.join(outputSmaliPath, "smali"), resultFiles)
     }
     let outputFilePath = path.join(apkPath, "..", "result_report.json")
@@ -42,11 +44,11 @@ let findArscReflectInSrc = (arscData, outputSrcPath, resultFiles) => {
     travelDirectory(outputSrcPath, (originFile) => {
         let smaliSrc = fs.readFileSync(originFile, 'utf8')
         let fileKey = originFile.slice(outputSrcPath.length + 1, originFile.length - 6)
+        console.log("handle file " + fileKey)
         if (smaliSrc.indexOf(KEY_IDENTIDER_METHOD) < 0) {
             return
         }
         resultFiles[fileKey] = []
-        console.log("handle file " + fileKey)
         for (let index = 0; index < arscData.length; index++) {
             const element = arscData[index];
             let resType = element[KEY_RESOURCE_TYPE]
@@ -56,11 +58,18 @@ let findArscReflectInSrc = (arscData, outputSrcPath, resultFiles) => {
             }
         }
     })
-
 }
 
 let findRegexStrInSrc = (targetRegex, outputSrcPath, resultFiles) => {
-
+    let matchRegex = new RegExp(targetRegex)
+    travelDirectory(outputSrcPath, (originFile) => {
+        let smaliSrc = fs.readFileSync(originFile, 'utf8')
+        let fileKey = originFile.slice(outputSrcPath.length + 1, originFile.length - 6)
+        console.log("handle file " + fileKey)
+        if (smaliSrc.search(matchRegex) >= 0) {
+            resultFiles.push(fileKey)
+        }
+    })
 }
 
 let travelDirectory = (inputDir, action) => {
