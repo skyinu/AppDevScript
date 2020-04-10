@@ -6,6 +6,7 @@ const fs = require('fs')
 const KEY_RESOURCE_TYPE = "Type"
 const KEY_RESOURCE_NAME = "Name"
 const KEY_IDENTIDER_METHOD = "getIdentifier(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)I"
+const DIR_SMALI = "smali"
 
 let searchInApk = (apkPath, targetRegex, isResMode) => {
     let outputSmaliPath = reveriseApK(apkPath)
@@ -18,10 +19,15 @@ let searchInApk = (apkPath, targetRegex, isResMode) => {
             skip_empty_lines: true
         })
         resultFiles = {}
-        findArscReflectInSrc(arscData, path.join(outputSmaliPath, "smali"), resultFiles)
+        travelSmaliDir(outputSmaliPath, (smaliPath) => {
+            findArscReflectInSrc(arscData, smaliPath, resultFiles)
+        })
     } else {
         resultFiles = []
-        findRegexStrInSrc(targetRegex, path.join(outputSmaliPath, "smali"), resultFiles)
+        travelSmaliDir(outputSmaliPath, (smaliPath) => {
+            findRegexStrInSrc(targetRegex, smaliPath, resultFiles)
+        })
+
     }
     let outputFilePath = path.join(apkPath, "..", "result_report.json")
     fs.writeFileSync(outputFilePath, JSON.stringify(resultFiles))
@@ -35,9 +41,29 @@ let parseArsc = (apkPath) => {
 }
 let reveriseApK = (apkPath) => {
     let outputFilePath = path.join(apkPath, "..", "apktools")
-    let command = " d " + apkPath + " -o " + outputFilePath
-    resTools.callApkTool(command)
+    if (!fs.existsSync(outputFilePath)) {
+        let command = " d " + apkPath + " -o " + outputFilePath
+        resTools.callApkTool(command)
+    } else {
+        console.log("had alread been reversed")
+    }
     return outputFilePath
+}
+
+let travelSmaliDir = (outputSmaliPath, action) => {
+    let dexCount = 1
+    let dirSuffix = "_classes"
+    let smali = DIR_SMALI
+    while (true) {
+        let smaliPath = path.join(outputSmaliPath, smali)
+        if (fs.existsSync(smaliPath) && fs.statSync(smaliPath).isDirectory()) {
+            action(smaliPath)
+            dexCount++
+            smali += dirSuffix + `${dexCount}`
+        } else {
+            break
+        }
+    }
 }
 
 let findArscReflectInSrc = (arscData, outputSrcPath, resultFiles) => {
