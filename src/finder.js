@@ -57,10 +57,12 @@ let travelSmaliDir = (outputSmaliPath, action) => {
     while (true) {
         let smaliPath = path.join(outputSmaliPath, smali)
         if (fs.existsSync(smaliPath) && fs.statSync(smaliPath).isDirectory()) {
+            console.log("handle dir " + smaliPath)
             action(smaliPath)
             dexCount++
-            smali += dirSuffix + `${dexCount}`
+            smali = DIR_SMALI + dirSuffix + `${dexCount}`
         } else {
+            console.log("break path " + smaliPath)
             break
         }
     }
