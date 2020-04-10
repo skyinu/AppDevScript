@@ -6,8 +6,8 @@ use npm install this package first - npm install trackapktool
 
 thn run the command like this - trackapktool -a xx -t xxx -r
 
--a:indicate the apk path
--t: the regex that whether occur in apk
--r: indicate we want search resource name usage in apk
++ -a:indicate the apk path
++ -t: the regex that whether occur in apk
++ -r: indicate we want search resource name usage in apk
 
 after the programe finished, it will generate a file named `result_report.json` at the directory which the apk file locate
