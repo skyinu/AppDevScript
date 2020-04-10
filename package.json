@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
+  "bin": {
+    "trackapktool": "./src/index.js"
+  },
   "scripts": {
     "dev": "node src/index.js test",
     "test": "node src/index.js -a xxx.apk"
