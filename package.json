@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "bin": {
-    "trackapktool": "./src/index.js"
+    "trackapktool": "./src/index.js",
+    "zipMerger": "./src/zipmerger/index.js"
   },
   "scripts": {
     "dev": "node src/index.js test",
@@ -21,6 +22,7 @@
   },
   "homepage": "https://github.com/skyinu/TrackApkTool#readme",
   "dependencies": {
-    "csv-parse": "^4.8.8"
+    "csv-parse": "^4.8.8",
+    "compressing": "1.4.0"
   }
 }
