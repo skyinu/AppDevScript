@@ -1,6 +1,6 @@
 {
-  "name": "trackapktool",
-  "version": "0.0.7",
+  "name": "appdevscript",
+  "version": "0.1.1",
   "description": "",
   "main": "index.js",
   "bin": {
@@ -13,14 +13,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/skyinu/TrackApkTool.git"
+    "url": "git+https://github.com/skyinu/AppDevScript.git"
   },
   "author": "skyinu",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/skyinu/TrackApkTool/issues"
+    "url": "https://github.com/skyinu/AppDevScript/issues"
   },
-  "homepage": "https://github.com/skyinu/TrackApkTool#readme",
+  "homepage": "https://github.com/skyinu/AppDevScript#readme",
   "dependencies": {
     "csv-parse": "^4.8.8",
     "compressing": "1.4.0"

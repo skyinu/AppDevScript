@@ -8,7 +8,7 @@ this repo aims to record scripts developed by me, these scripts are used to solv
 a script aim to find the class in apk that has specific constant string、function and so on and the resource name used with the explicit name
 
 #### usage
-use npm install this package first - npm install trackapktool
+use npm install this package first - npm install appdevscript
 
 thn run the command like this - trackapktool -a xx -t xxx -r
 
@@ -23,7 +23,7 @@ a script to merge multi zip file to one. today we use javaassist/asm in Android 
 
 #### usage
 
-use npm install this package first - `npm install zipmerger`
+use npm install this package first - `npm install appdevscript`
 
 thn run the command like this - zipMerger -s xx -ss xxx -d xxx
 
