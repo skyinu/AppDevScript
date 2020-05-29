@@ -4,10 +4,12 @@ let argvs = process.argv;
 let apkPath;
 let targetRegex;
 let isResMode = false
+let decodeToJava = true
 
 const APK_PATH = "-a";
 const TARGET_REGEX = "-t";
 const AND_RES_MODE = "-r";
+const DECODE_FORMAT = "-f"
 
 for (let index = 0; index < argvs.length; index++) {
     if (argvs[index].toLocaleLowerCase() === APK_PATH) {
@@ -18,11 +20,14 @@ for (let index = 0; index < argvs.length; index++) {
         index++
     } else if (argvs[index].toLocaleLowerCase() === AND_RES_MODE) {
         isResMode = true
+    } else if (argvs[index].toLocaleLowerCase() === "smali") {
+        decodeToJava = false
     }
 }
-console.log("apk path is " + apkPath + " targetRegex is " + targetRegex + " isResMode " + isResMode)
+console.log("apk path is " + apkPath + " targetRegex is " + targetRegex + " isResMode " +
+    isResMode + "decodeToJava " + decodeToJava)
 if (isResMode || targetRegex) {
-    finder.searchInApk(apkPath, targetRegex, isResMode)
+    finder.searchInApk(apkPath, targetRegex, isResMode, decodeToJava)
 } else {
     console.log("invalid input")
 }

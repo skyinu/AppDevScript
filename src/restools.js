@@ -16,7 +16,18 @@ let callArscBlamer = (command) => {
     console.log(`callArscBlamer stdout: ${log}`);
 }
 
+let callJadx = (command) => {
+    let executeFile = "jadx"
+    const jadxPath = path.join(__dirname, "..", "res", path.sep,
+        "jadx-1.1.0", path.sep, "bin", path.sep, executeFile)
+    let realComand = jadxPath + command
+    console.log("callJadx : " + realComand + "\n")
+    let log = childProcess.execSync(realComand)
+    console.log(`callJadx stdout: ${log}`);
+}
+
 module.exports = {
     callApkTool,
-    callArscBlamer
+    callArscBlamer,
+    callJadx
 }
