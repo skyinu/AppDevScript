@@ -12,6 +12,7 @@ import kotlin.concurrent.thread
 object FdMonitor {
   private const val PROC = "proc"
   private const val FD = "fd"
+  private const val FD_WARNING = 10
   private var fdMap = mutableMapOf<String, Int>()
 
   fun initMonitor() {
@@ -19,18 +20,24 @@ object FdMonitor {
       return
     }
     thread(start = true, isDaemon = false, name = FdMonitor::class.java.name) {
-      Thread.sleep(1_000)
-      parseFd()
-      printFdStatistic(fdMap)
+      while (true) {
+        Thread.sleep(10_000)
+        try {
+          parseFd()
+          printFdStatistic(fdMap)
+        } catch (err: Exception) {
+          err.printStackTrace()
+        }
+      }
     }
   }
 
   @RequiresApi(VERSION_CODES.O)
   private fun parseFd() {
+    fdMap.clear()
     val fdDir = File(getFdDir())
     fdDir.listFiles()
         .map { safeGetRealPath(it) }
-        .filter { !it.isNullOrBlank() }
         .forEach {
           val count = fdMap.getOrDefault(it!!, 0)
           fdMap[it] = count + 1
@@ -41,7 +48,9 @@ object FdMonitor {
     Log.i(FdMonitor::class.java.name, "----------------------------")
     var amount = 0
     fdData.keys.forEach {
-      Log.i(FdMonitor::class.java.name, "fd=${it} count=${fdData[it]}")
+      if (fdData.getValue(it) >= FD_WARNING) {
+        Log.i(FdMonitor::class.java.name, "fd=${it} count=${fdData[it]}")
+      }
       amount += (fdData[it] ?: 0)
     }
     Log.i(FdMonitor::class.java.name, "fd amount = $amount")
@@ -55,7 +64,7 @@ object FdMonitor {
           .toRealPath()
           .toAbsolutePath().fileName.toString()
     } catch (err: Exception) {
-      null
+      "unknowfd"
     }
   }
 
