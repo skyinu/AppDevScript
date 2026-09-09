@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/skyinu/AppDevScript#readme",
   "dependencies": {
-    "csv-parse": "^4.8.8",
+    "csv-parse": "^7.0.2",
     "compressing": "1.10.5"
   }
 }
